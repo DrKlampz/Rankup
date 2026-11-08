@@ -1,0 +1,14 @@
+## Interface: 16001
+## Title: |cffe0b04aRankup|r
+## Notes: When you learn a higher rank of a spell, it goes on your action bars where the old rank was. Window, history and settings from the minimap button. Slash command: /rankup
+## Author: David
+## Version: 1.1.0
+## Category: Action Bars
+## IconTexture: Interface\AddOns\Rankup\Media\Icon
+## SavedVariables: RankupDB
+## X-License: MIT
+
+IssueLog.lua
+Core.lua
+UI.lua
+Minimap.lua
