@@ -1,4 +1,4 @@
--- Rankup window (bars list, history, settings) and the "ranked up" toast.
+-- Rankhound window (bars list, history, settings) and the "ranked up" toast.
 local ADDON, R = ...
 local UI = {}
 R.UI = UI
@@ -63,11 +63,11 @@ local function GetRow(i)
         GameTooltip:AddLine(self.entry.name, 1, 0.82, 0)
         GameTooltip:AddLine(R.SlotLabel(self.entry.slot), 0.8, 0.8, 0.8)
         if self.entry.state == "up" then
-            GameTooltip:AddLine("A higher rank is known. Rankup will swap it.", 0.5, 1, 0.5, true)
+            GameTooltip:AddLine("A higher rank is known. Rankhound will swap it.", 0.5, 1, 0.5, true)
             GameTooltip:AddLine("Click: keep this rank on the bar.", 1, 1, 1, true)
         elseif self.entry.state == "keep" then
             GameTooltip:AddLine("Kept at this rank on purpose.", 1, 0.8, 0.3, true)
-            GameTooltip:AddLine("Click: let Rankup upgrade it again.", 1, 1, 1, true)
+            GameTooltip:AddLine("Click: let Rankhound upgrade it again.", 1, 1, 1, true)
         else
             GameTooltip:AddLine("Already the highest rank you know.", 0.7, 0.7, 0.7, true)
             GameTooltip:AddLine("Click: keep this rank even after you learn a higher one.", 1, 1, 1, true)
@@ -137,7 +137,7 @@ local function Paint()
 end
 
 local function Build()
-    win = CreateFrame("Frame", "RankupWindow", UIParent, "BackdropTemplate")
+    win = CreateFrame("Frame", "RankhoundWindow", UIParent, "BackdropTemplate")
     win:SetSize(430, 520)
     win:SetPoint("CENTER", 0, 40)
     win:SetFrameStrata("HIGH")
@@ -149,15 +149,15 @@ local function Build()
     win:SetScript("OnDragStop", win.StopMovingOrSizing)
     Backdrop(win)
     win:Hide()
-    tinsert(UISpecialFrames, "RankupWindow")
+    tinsert(UISpecialFrames, "RankhoundWindow")
 
     local icon = win:CreateTexture(nil, "ARTWORK")
     icon:SetSize(26, 26)
     icon:SetPoint("TOPLEFT", 12, -10)
-    icon:SetTexture("Interface\\AddOns\\Rankup\\Media\\Icon")
+    icon:SetTexture("Interface\\AddOns\\Rankhound\\Media\\Icon")
     local title = win:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
     title:SetPoint("LEFT", icon, "RIGHT", 8, 0)
-    title:SetText("Rankup")
+    title:SetText("Rankhound")
     title:SetTextColor(unpack(GOLD))
     local ver = win:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
     ver:SetPoint("LEFT", title, "RIGHT", 8, -2)
@@ -178,7 +178,7 @@ local function Build()
     holder:SetPoint("BOTTOMRIGHT", -12, 118)
     Backdrop(holder, { 0.2, 0.2, 0.24 })
     holder:SetBackdropColor(0.05, 0.05, 0.06, 1)
-    local sf = CreateFrame("ScrollFrame", "RankupScroll", holder, "UIPanelScrollFrameTemplate")
+    local sf = CreateFrame("ScrollFrame", "RankhoundScroll", holder, "UIPanelScrollFrameTemplate")
     sf:SetPoint("TOPLEFT", 4, -4)
     sf:SetPoint("BOTTOMRIGHT", -26, 4)
     win.child = CreateFrame("Frame", nil, sf)
@@ -229,7 +229,7 @@ end
 local toast, hideAt
 function UI.Toast(changed)
     if not toast then
-        toast = CreateFrame("Frame", "RankupToast", UIParent, "BackdropTemplate")
+        toast = CreateFrame("Frame", "RankhoundToast", UIParent, "BackdropTemplate")
         toast:SetSize(300, 62)
         toast:SetPoint("TOP", UIParent, "TOP", 0, -170)
         toast:SetFrameStrata("TOOLTIP")

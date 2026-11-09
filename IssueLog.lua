@@ -4,7 +4,7 @@
 -- Read it with /issues, or Ctrl+click an add-on's minimap button. Nothing is sent anywhere.
 local ADDON, NS = ...
 local VERSION = 3
-local DB_GLOBAL = "RankupDB"        -- the add-on's SavedVariables table; the log lives inside it
+local DB_GLOBAL = "RankhoundDB"        -- the add-on's SavedVariables table; the log lives inside it
 local MAX_ENTRIES = 60
 local MAX_LEN = 500
 
@@ -343,7 +343,7 @@ local function T(name, fn) table.insert(D.tests[ADDON], { name = name, fn = fn }
 local function Age(t) if not t or t == 0 then return "never" end return math.floor((time() - t) / 60) .. " min ago" end
 
 local SLASHKEY = { Baggie = "BAGGIE", Guildie = "GUILDIE", Fishie = "FISHIE", Outfitter = "OUTFITTER", Postage = "POSTAGE",
-    Profiteer = "PROFITEER", Vanity = "VANITY", GreedUI = "GREEDUI", Rankup = "RANKUP" }
+    Profiteer = "PROFITEER", Vanity = "VANITY", GreedUI = "GREEDUI", Rankhound = "RANKHOUND" }
 
 T("saved data is loaded", function() return type(_G[DB_GLOBAL]) == "table" end)
 T("version is set", function() return (version ~= nil and version ~= ""), tostring(version) end)
@@ -368,7 +368,7 @@ T("no blocked actions logged", function()
 end)
 
 local S = {}
-S.Rankup = function()
+S.Rankhound = function()
     T("spell lookups answer", function() return (C_Spell and C_Spell.GetSpellInfo ~= nil) or GetSpellInfo ~= nil end)
     T("action bar API present", function() return type(HasAction) == "function" and type(GetActionInfo) == "function" end)
     T("pickup and place API present (the game may still refuse in some cases)", function() return type(PlaceAction) == "function" and ((C_Spell and C_Spell.PickupSpell) or PickupSpell) ~= nil end)

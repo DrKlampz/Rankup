@@ -1,4 +1,4 @@
--- Rankup: when you learn a higher rank of a spell, it goes on your action bars where the old rank was.
+-- Rankhound: when you learn a higher rank of a spell, it goes on your action bars where the old rank was.
 local ADDON, R = ...
 local VERSION = "1.1.0"
 R.VERSION = VERSION
@@ -23,7 +23,7 @@ local function Merge(db, def)
     return db
 end
 
-function R.Print(m) print("|cffe0b04aRankup:|r " .. m) end
+function R.Print(m) print("|cffe0b04aRankhound:|r " .. m) end
 local function Issue(kind, what, msg) if R.Issue then pcall(R.Issue, kind, what, msg) end end
 
 ---------------------------------------------------------------------------
@@ -174,8 +174,8 @@ f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(_, event, arg1)
     if event == "ADDON_LOADED" then
         if arg1 ~= ADDON then return end
-        _G.RankupDB = Merge(_G.RankupDB or {}, DEFAULTS)
-        R.db = _G.RankupDB
+        _G.RankhoundDB = Merge(_G.RankhoundDB or {}, DEFAULTS)
+        R.db = _G.RankhoundDB
         for _, e in ipairs({ "LEARNED_SPELL_IN_TAB", "SPELLS_CHANGED", "PLAYER_LEVEL_UP", "PLAYER_ENTERING_WORLD", "PLAYER_REGEN_ENABLED", "TRAINER_CLOSED", "ACTIONBAR_SLOT_CHANGED" }) do
             pcall(f.RegisterEvent, f, e)
         end
@@ -200,8 +200,8 @@ f:SetScript("OnEvent", function(_, event, arg1)
     C_Timer.After(2, function() pending = nil R.Run() end)   -- let the game finish learning the spell first
 end)
 
-SLASH_RANKUP1 = "/rankup"
-SlashCmdList.RANKUP = function(msg)
+SLASH_RANKHOUND1 = "/rankhound"
+SlashCmdList.RANKHOUND = function(msg)
     msg = (msg or ""):lower():match("^%s*(.-)%s*$")
     if msg == "show" or msg == "window" or msg == "open" then
         if R.UI then R.UI.Toggle() end

@@ -1,4 +1,4 @@
--- Rankup minimap button: click = window, right-click = rank up now, shift-click = automatic on/off,
+-- Rankhound minimap button: click = window, right-click = rank up now, shift-click = automatic on/off,
 -- ctrl-click = issue log, drag = move around the ring.
 local ADDON_NAME, R = ...
 local MM = {}
@@ -25,7 +25,7 @@ local function DragUpdate()
 end
 local function Tip(self)
     GameTooltip:SetOwner(self, "ANCHOR_LEFT")
-    GameTooltip:AddLine("Rankup", 0.88, 0.69, 0.29)
+    GameTooltip:AddLine("Rankhound", 0.88, 0.69, 0.29)
     local total, up, keep = R.Counts(R.Scan())
     GameTooltip:AddLine(("%d spells on your bars, %d ready to rank up"):format(total, up), up > 0 and 0.5 or 0.8, up > 0 and 1 or 0.8, up > 0 and 0.5 or 0.8)
     GameTooltip:AddLine("Automatic: " .. (R.db.auto and "|cff55ff55on|r" or "|cffff5555off|r"), 1, 1, 1)
@@ -40,7 +40,7 @@ end
 
 function MM.Create()
     if btn or not Minimap then return end
-    btn = CreateFrame("Button", "RankupMinimapButton", Minimap)
+    btn = CreateFrame("Button", "RankhoundMinimapButton", Minimap)
     btn:SetSize(31, 31)
     btn:SetFrameStrata("MEDIUM")
     local lvl = Minimap:GetFrameLevel()
