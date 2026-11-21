@@ -2,7 +2,7 @@
 ## Title: |cffe0b04aRankhound|r
 ## Notes: When you learn a higher rank of a spell, it goes on your action bars where the old rank was. Window, history and settings from the minimap button. Slash command: /rankhound
 ## Author: David
-## Version: 1.2.0
+## Version: 1.2.1
 ## Category: Action Bars
 ## IconTexture: Interface\AddOns\Rankhound\Media\Icon
 ## SavedVariables: RankhoundDB

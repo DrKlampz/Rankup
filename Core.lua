@@ -1,6 +1,6 @@
 -- Rankhound: when you learn a higher rank of a spell, it goes on your action bars where the old rank was.
 local ADDON, R = ...
-local VERSION = "1.1.0"
+local VERSION = "1.2.1"
 R.VERSION = VERSION
 
 local DEFAULTS = {
@@ -10,8 +10,6 @@ local DEFAULTS = {
     sound = true,       -- a short sound when ranks change
     minimapHide = false,
     minimapAngle = 150,
-    ignore = {},        -- [spell name] = true: keep this one at the rank you put on the bar
-    history = {},       -- recent swaps
 }
 
 local function Merge(db, def)
@@ -22,6 +20,58 @@ local function Merge(db, def)
     end
     return db
 end
+
+---------------------------------------------------------------------------
+-- The spells you chose to keep at a rank and the history of swaps belong to one character (ranks and
+-- classes differ), so they are kept under RankhoundDB.chars[character]. The options are shared.
+---------------------------------------------------------------------------
+local PERCHAR = { ignore = true, history = true }
+
+local function CharName()
+    local first, second = UnitName("player")
+    if type(first) ~= "string" or first == "" or first == "Unknown" or first == _G.UNKNOWNOBJECT then return nil end
+    -- some servers give characters two names; UnitName hands the last one back in the realm slot
+    if type(second) == "string" and second ~= "" and not first:find(" ", 1, true) then
+        local r1 = GetRealmName and GetRealmName()
+        local r2 = GetNormalizedRealmName and GetNormalizedRealmName()
+        if second ~= r1 and second ~= r2 then return first .. " " .. second end
+    end
+    return first
+end
+
+local scratch = { ignore = {}, history = {} }
+local mineKey
+local function Mine()
+    local db = _G.RankhoundDB
+    if mineKey and db.chars and db.chars[mineKey] then return db.chars[mineKey] end
+    local name = CharName()
+    if not name then return scratch end
+    local realm = GetRealmName and GetRealmName()
+    if type(realm) == "string" and realm ~= "" then db.lastRealm = realm else realm = db.lastRealm or "" end
+    local key = name .. "-" .. realm
+    db.chars = db.chars or {}
+    local c = db.chars[key]
+    if not c then
+        c = { ignore = {}, history = {} }
+        db.chars[key] = c
+        -- what was saved before this was split by character goes to the first character that plays
+        if not db.perCharMoved then
+            db.perCharMoved = true
+            for k in pairs(PERCHAR) do
+                local v = rawget(db, k)
+                if type(v) == "table" then c[k] = v end
+                rawset(db, k, nil)
+            end
+        end
+    end
+    mineKey = key
+    return c
+end
+
+local dbMeta = {
+    __index = function(_, k) if PERCHAR[k] then return Mine()[k] end end,
+    __newindex = function(t, k, v) if PERCHAR[k] then Mine()[k] = v else rawset(t, k, v) end end,
+}
 
 function R.Print(m) print("|cffe0b04aRankhound:|r " .. m) end
 local function Issue(kind, what, msg) if R.Issue then pcall(R.Issue, kind, what, msg) end end
@@ -176,6 +226,11 @@ f:SetScript("OnEvent", function(_, event, arg1)
         if arg1 ~= ADDON then return end
         _G.RankhoundDB = Merge(_G.RankhoundDB or {}, DEFAULTS)
         R.db = _G.RankhoundDB
+        for k in pairs(PERCHAR) do
+            if R.db.perCharMoved then rawset(R.db, k, nil) end
+        end
+        setmetatable(R.db, dbMeta)
+        pcall(Mine)
         for _, e in ipairs({ "LEARNED_SPELL_IN_TAB", "SPELLS_CHANGED", "PLAYER_LEVEL_UP", "PLAYER_ENTERING_WORLD", "PLAYER_REGEN_ENABLED", "TRAINER_CLOSED", "ACTIONBAR_SLOT_CHANGED" }) do
             pcall(f.RegisterEvent, f, e)
         end
